@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
-public class ApplicatonConfig {
+public class ApplicatonConfig{
 
     @SuppressWarnings("deprecation")
     @Bean
@@ -52,7 +52,6 @@ public class ApplicatonConfig {
         return source;
     }
 
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -71,4 +70,6 @@ public class ApplicatonConfig {
             }
         };
     }
+
+
 }

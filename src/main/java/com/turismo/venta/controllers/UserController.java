@@ -6,6 +6,7 @@ import com.turismo.venta.response.AuthResponse;
 import com.turismo.venta.security.JwtProvider;
 import com.turismo.venta.service.UserService;
 import com.turismo.venta.service.UserServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
