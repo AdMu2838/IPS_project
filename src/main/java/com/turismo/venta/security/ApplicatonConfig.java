@@ -27,7 +27,7 @@ public class ApplicatonConfig{
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(
                         authorize -> authorize.requestMatchers("/api/**")
-                                .authenticated()
+                                .permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
