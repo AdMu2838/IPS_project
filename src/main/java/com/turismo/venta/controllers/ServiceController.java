@@ -4,11 +4,10 @@ import com.turismo.venta.entity.Services;
 import com.turismo.venta.service.ServicesService;
 import com.turismo.venta.service.ServicesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -22,4 +21,36 @@ public class ServiceController {
     public List<Services> getAllServices() {
         return serviceService.getAllServices();
     }
+    //services por nombre
+    @GetMapping("/services/{destino}")
+    public List<Services> findServicesByDestino(@PathVariable String destino) {
+        return serviceService.findServicesByDestino(destino);
+    }
+
+    @GetMapping("/services/fecha")
+    public List<Services> findServicesByFecha(@RequestParam("date") String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        try {
+            LocalDate date = LocalDate.parse(dateString, formatter);
+
+            return serviceService.findServicesByFecha(String.valueOf(date));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @DeleteMapping("/services/{serviceId}")
+    public void deleteService(@PathVariable String serviceId) {
+        serviceService.deleteService(serviceId);
+    }
+    @PutMapping("/services")
+    public Services updateService(@RequestBody Services service) {
+        return serviceService.updateService(service);
+    }
+    @PostMapping("/services")
+    public Services saveService(@RequestBody Services service) {
+        return serviceService.saveService(service);
+    }
+
 }

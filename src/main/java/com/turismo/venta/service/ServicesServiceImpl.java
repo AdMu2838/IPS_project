@@ -15,7 +15,7 @@ public class ServicesServiceImpl implements ServicesService{
     public List<Services> getAllServices() {
         return serviceRepository.findAll();
     }
-/*
+
     @Override
     public List<Services> findServicesByDestino(String destino) {
         return serviceRepository.findByDestino(destino);
@@ -40,6 +40,5 @@ public class ServicesServiceImpl implements ServicesService{
     public Services updateService(Services service) {
         return null;
     }
-*/
 
 }
