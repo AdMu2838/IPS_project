@@ -11,10 +11,10 @@ public interface ServicesService {
 
     public List<Services> findServicesByFecha(String fecha);
 
-    public Services saveService(Services service);
+    public void saveService(Services service);
 
     public void deleteService(String serviceId);
 
-    public Services updateService(Services service);
+    public void updateService(Services service);
 
 }

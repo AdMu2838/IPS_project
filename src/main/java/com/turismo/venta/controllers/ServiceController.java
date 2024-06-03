@@ -4,6 +4,7 @@ import com.turismo.venta.entity.Services;
 import com.turismo.venta.service.ServicesService;
 import com.turismo.venta.service.ServicesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,39 +19,42 @@ public class ServiceController {
     private ServicesServiceImpl serviceService;
 
     @GetMapping("/services")
-    public List<Services> getAllServices() {
-        return serviceService.getAllServices();
+    public ResponseEntity<List<Services>> getAllServices() {
+        return ResponseEntity.ok(serviceService.getAllServices());
     }
     //services por nombre
     @GetMapping("/services/{destino}")
-    public List<Services> findServicesByDestino(@PathVariable String destino) {
-        return serviceService.findServicesByDestino(destino);
+    public ResponseEntity<List<Services>> findServicesByDestino(@PathVariable String destino) {
+        return ResponseEntity.ok(serviceService.findServicesByDestino(destino));
     }
 
     @GetMapping("/services/fecha")
-    public List<Services> findServicesByFecha(@RequestParam("date") String dateString) {
+    public ResponseEntity<List<Services>> findServicesByFecha(@RequestParam("date") String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
         try {
             LocalDate date = LocalDate.parse(dateString, formatter);
 
-            return serviceService.findServicesByFecha(String.valueOf(date));
+            return ResponseEntity.ok(serviceService.findServicesByFecha(String.valueOf(date)));
         } catch (Exception e) {
             return null;
         }
     }
 
-    @DeleteMapping("/services/{serviceId}")
-    public void deleteService(@PathVariable String serviceId) {
-        serviceService.deleteService(serviceId);
+    @DeleteMapping("/services/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable String id) {
+        serviceService.deleteService(id);
+        return ResponseEntity.noContent().build();
     }
-    @PutMapping("/services")
-    public Services updateService(@RequestBody Services service) {
-        return serviceService.updateService(service);
+    @PutMapping("/services/{id}")
+    public ResponseEntity<Void> updateService(@RequestBody Services service) {
+        serviceService.updateService(service);
+        return ResponseEntity.noContent().build();
     }
     @PostMapping("/services")
-    public Services saveService(@RequestBody Services service) {
-        return serviceService.saveService(service);
+    public ResponseEntity<Void> saveService(@RequestBody Services service) {
+        serviceService.saveService(service);
+        return ResponseEntity.noContent().build();
     }
 
 }

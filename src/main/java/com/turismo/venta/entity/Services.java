@@ -1,9 +1,6 @@
 package com.turismo.venta.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -11,6 +8,7 @@ import lombok.Data;
 @Table(name = "servicios")
 public class Services {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "codigo_servicio")
     private String id;
 

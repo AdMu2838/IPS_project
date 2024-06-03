@@ -27,18 +27,27 @@ public class ServicesServiceImpl implements ServicesService{
     }
 
     @Override
-    public Services saveService(Services service) {
-        return null;
+    public void saveService(Services service) {
+        if(service.getId() == null){
+            serviceRepository.save(service);
+        } else{
+            throw new RuntimeException("No permitido");
+        }
+
     }
 
     @Override
     public void deleteService(String serviceId) {
-
+        serviceRepository.deleteById(serviceId);
     }
 
     @Override
-    public Services updateService(Services service) {
-        return null;
+    public void updateService(Services service) {
+        if(service.getId() != null){
+            serviceRepository.save(service);
+        }else {
+            throw new RuntimeException("No permitido");
+        }
     }
 
 }
