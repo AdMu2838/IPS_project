@@ -28,7 +28,7 @@ public class ApplicatonConfig{
                 .authorizeRequests(
                         authorize -> authorize.requestMatchers("/api/**")
                                 .permitAll()
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/user/**").permitAll()
                                 .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf -> csrf.disable())

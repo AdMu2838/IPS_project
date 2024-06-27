@@ -7,6 +7,7 @@ import com.turismo.venta.security.JwtProvider;
 import com.turismo.venta.service.UserService;
 import com.turismo.venta.service.UserServiceImpl;
 import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
@@ -37,7 +38,6 @@ public class UserController {
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) {
         String email = user.getEmail();
         String password = user.getPassword();
-        String role = user.getRol();
 
         if (userRepository.findByEmail(email) != null) {
             throw new RuntimeException("Email is already used with another account");
@@ -45,7 +45,6 @@ public class UserController {
 
         User newUser = new User();
         newUser.setEmail(email);
-        newUser.setRol(role);
         newUser.setPassword(passwordEncoder.encode(password));
 
         User savedUser = userRepository.save(newUser);
@@ -105,5 +104,9 @@ public class UserController {
 
     }
 
+    @GetMapping("/listar")
+    public ResponseEntity<?> listar(){
+        return ResponseEntity.ok(userRepository.findAll());
+    }
 
 }

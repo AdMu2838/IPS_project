@@ -32,11 +32,38 @@ public class UserServiceImpl implements UserDetailsService {
 
         }
 
-        System.out.println("Loaded user: " + user.getEmail() + ", Role: " + user.getRol());
+        System.out.println("Loaded user: " + user.getEmail());
         List<GrantedAuthority> authorities = new ArrayList<>();
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
                 authorities);
     }
+
+    //public List<User> getAllUser(){
+
+    //};
+
+    public User findUserByNombre(String nombre) {
+        return userRepository.findByNombre(nombre);
+    };
+
+    public User findUserById(String userId){
+        return userRepository.findById(userId).get();
+
+    } ;
+
+    public List<User> findAllUsers(){
+        return userRepository.findAll();
+    };
+
+    public void saveUser(User user){
+        userRepository.save(user);
+    };
+    public void deleteUser(String userId){
+        userRepository.deleteById(userId);
+    };
+    public void updateUser(User user){
+        userRepository.save(user);
+    };
 }
