@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "Empleados")
+@Table(name = "empleados")
 public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Empleado {
     @Column
     private String apellido;
 
-    @Column
+    @Column(name = "direccion")
     private String direccion;
 
     @Column

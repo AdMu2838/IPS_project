@@ -27,4 +27,16 @@ public class Services {
     @Column(name = "costo_servicio")
     private String precio;
 
+    public Services(String id, String nombre, String descripcion, String destino, String fecha, String precio) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.destino = destino;
+        this.fecha = fecha;
+        this.precio = precio;
+    }
+
+    public Services() {
+
+    }
 }

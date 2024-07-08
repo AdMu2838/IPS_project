@@ -7,7 +7,7 @@ import lombok.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 @Entity
-@Table(name = "Personas")
+@Table(name = "personas")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
