@@ -27,8 +27,7 @@ public class AuthenticationController {
 
     @Autowired
     private TokenService tokenService;
-
-
+    
     @PostMapping
     public ResponseEntity autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario){
         Authentication autToken = new UsernamePasswordAuthenticationToken(datosAutenticacionUsuario.login(),
