@@ -1,10 +1,9 @@
 package com.turismo.venta.domain.servicio;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,26 +12,29 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "servicio", schema = "web_tourist_bd")
 public class Servicio {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "serCod", nullable = false)
     private Integer id;
 
-    @Column(name = "serImg")
+    @Column(name = "serimg")
     private String serImg;
 
-    @Column(name = "serDes")
+    @Column(name = "serdes")
     private String serDes;
 
-    @Column(name = "serNom", nullable = false, length = 50)
+    @Column(name = "sernom", nullable = false, length = 50)
     private String serNom;
 
-    @Column(name = "serFec", nullable = false)
+    @Column(name = "serfec", nullable = false)
     private LocalDate serFec;
 
-    @Column(name = "serCos", nullable = false, precision = 10, scale = 2)
+    @Column(name = "sercos", nullable = false, precision = 10, scale = 2)
     private BigDecimal serCos;
 
     @ColumnDefault("'A'")
