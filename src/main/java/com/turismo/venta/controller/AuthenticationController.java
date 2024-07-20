@@ -28,6 +28,7 @@ public class AuthenticationController {
     @Autowired
     private TokenService tokenService;
 
+
     @PostMapping
     public ResponseEntity autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario){
         Authentication autToken = new UsernamePasswordAuthenticationToken(datosAutenticacionUsuario.login(),
@@ -35,6 +36,5 @@ public class AuthenticationController {
         var usuarioAutenticado = authenticationManager.authenticate(autToken);
         var JWTtoken = tokenService.generarToken((Usuario) usuarioAutenticado.getPrincipal());
         return ResponseEntity.ok(new DatosJWTToken(JWTtoken));
-        
     }
 }
