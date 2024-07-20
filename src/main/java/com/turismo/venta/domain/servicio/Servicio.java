@@ -70,4 +70,16 @@ public class Servicio {
         this.serDestino = datosRegistroServicio.destino();
         this.serTipo = datosRegistroServicio.tipo();
     }
+
+    public void actualizarDatos(DatosActualizarServicio datosActualizarServicio) {
+        if (datosActualizarServicio.image() != null) {
+            this.serImg = datosActualizarServicio.image();
+        }
+        if (datosActualizarServicio.costo() != null) {
+            this.serCos = datosActualizarServicio.costo();
+        }
+        if (datosActualizarServicio.fecha() != null) {
+            this.serFec = datosActualizarServicio.fecha();
+        }
+    }
 }

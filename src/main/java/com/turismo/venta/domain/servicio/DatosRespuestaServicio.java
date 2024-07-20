@@ -2,29 +2,20 @@ package com.turismo.venta.domain.servicio;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
-public record DatosRegistroServicio(
-        @NotBlank
+public record DatosRespuestaServicio(
+        Long id,
         String image,
-        @NotBlank
-        String descripcion,
-        @NotBlank
         String nombre,
-        @NotNull
+        String descripcion,
+
         LocalDate fecha,
-        @NotNull
         BigDecimal costo,
-        @NotBlank
         String tipo,
-        @NotBlank
         String destino,
-        @NotNull
         Character estadoRegistro
 ) {
-
 }

@@ -1,9 +1,7 @@
 package com.turismo.venta.controller;
 
-import com.turismo.venta.domain.servicio.DatosListadoServicio;
-import com.turismo.venta.domain.servicio.DatosRegistroServicio;
-import com.turismo.venta.domain.servicio.Servicio;
-import com.turismo.venta.domain.servicio.ServicioRepository;
+import com.turismo.venta.domain.servicio.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +25,14 @@ public class ServicioController {
     @GetMapping
     public ResponseEntity<Page<DatosListadoServicio>> listarServicios(@PageableDefault(size = 2) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findAllActive(paginacion).map(DatosListadoServicio::new));
+    }
+    @PutMapping
+    @Transactional
+    public ResponseEntity actualizarServicio(@RequestBody @Valid DatosActualizarServicio datosActualizarServicio) {
+        Servicio servicio = servicioRepository.getReferenceById(datosActualizarServicio.id());
+        servicio.actualizarDatos(datosActualizarServicio);
+        return ResponseEntity.ok(new DatosRespuestaServicio(servicio.getId(),servicio.getSerImg(), servicio.getSerNom(),
+                servicio.getSerDes(), servicio.getSerFec(), servicio.getSerCos(), servicio.getSerTipo(),
+                servicio.getSerDestino(), servicio.getSerEstReg()));
     }
 }
