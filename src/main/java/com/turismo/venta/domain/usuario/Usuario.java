@@ -23,20 +23,15 @@ import java.util.List;
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "usucod", nullable = false)
     private Integer id;
 
-    @Column(name = "usuema", nullable = false, length = 100)
     private String usuEma;
 
-    @Column(name = "usupas", nullable = false)
     private String usuPas;
 
     @ColumnDefault("'A'")
-    @Column(name = "usuestreg", nullable = false)
     private Character usuEstReg;
 
-    @Column(name = "usurol", nullable = false, length = 45)
     private String usuRol;
 
     @Override
