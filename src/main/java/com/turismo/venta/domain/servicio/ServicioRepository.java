@@ -21,4 +21,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long>{
                                                 Pageable paginacion);
 
     Page<Servicio> findBySerTipo(String tipo, Pageable paginacion);
+
+    @Query("SELECT s FROM Servicio s JOIN s.paquetes p WHERE p.id = :paqCod")
+    Page<Servicio> findByPaquetes_PaqCod(Long paqCod, Pageable pageable);
 }
