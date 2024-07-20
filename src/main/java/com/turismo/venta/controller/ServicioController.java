@@ -58,4 +58,10 @@ public class ServicioController {
         return ResponseEntity.ok(servicioRepository.findServiciosByFechaBetween(LocalDate.parse(startDate),
                 LocalDate.parse(endDate),paginacion).map(DatosListadoServicio::new));
     }
+
+    @GetMapping("/tipo/{tipo}")
+    public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorTipo(@PathVariable String tipo,
+                                                                              @PageableDefault(size = 2) Pageable paginacion) {
+        return ResponseEntity.ok(servicioRepository.findBySerTipo(tipo, paginacion).map(DatosListadoServicio::new));
+    }
 }

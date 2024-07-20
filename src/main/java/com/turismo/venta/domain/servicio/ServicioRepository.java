@@ -19,4 +19,6 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long>{
     @Query("SELECT s FROM Servicio s WHERE s.serFec BETWEEN :startDate AND :endDate")
     Page<Servicio> findServiciosByFechaBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
                                                 Pageable paginacion);
+
+    Page<Servicio> findBySerTipo(String tipo, Pageable paginacion);
 }
