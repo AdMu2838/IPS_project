@@ -1,36 +1,41 @@
 package com.turismo.venta.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+@Getter
+@Setter
 @Entity
-@Table(name = "Ventas")
-@Data
+@Table(name = "venta", schema = "web_tourist_bd")
 public class Venta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int numVenta;
+    @Column(name = "venNum", nullable = false)
+    private Integer id;
 
-    @Temporal(TemporalType.DATE)
-    private Date fechaVenta;
+    @Column(name = "venFec", nullable = false)
+    private LocalDate venFec;
 
-    private String medioPago;
+    @Column(name = "venMedPag", nullable = false, length = 50)
+    private String venMedPag;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente", referencedColumnName = "id_cliente")
-    private Client cliente;
+    @ColumnDefault("'A'")
+    @Column(name = "venEstReg", nullable = false)
+    private Character venEstReg;
 
-    @ManyToOne
-    @JoinColumn(name = "id_empleado", referencedColumnName = "id_empleado")
-    private Empleado empleado;
+    @Column(name = "venMon", nullable = false, precision = 10, scale = 2)
+    private BigDecimal venMon;
 
-    @ManyToOne
-    @JoinColumn(name = "codigo_servicio", referencedColumnName = "codigo_servicio")
-    private Services servicio;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empCod")
+    private Empleado empCod;
 
-    @ManyToOne
-    @JoinColumn(name = "codigo_paquete", referencedColumnName = "codigo_paquete")
-    private Paquete paquete;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuCod")
+    private Usuario usuCod;
 
 }

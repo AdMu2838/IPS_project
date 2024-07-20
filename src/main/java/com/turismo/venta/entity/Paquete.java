@@ -1,29 +1,29 @@
 package com.turismo.venta.entity;
 
-import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.math.BigDecimal;
 
+@Getter
+@Setter
 @Entity
-@Data
-@Table(name = "Paquetes")
+@Table(name = "paquetes", schema = "web_tourist_bd")
 public class Paquete {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "codigo_paquete")
-    private Long codigoPaquete;
-    @Column(name = "costo_paquete")
-    private Double costoPaquete;
+    @Column(name = "paqCod", nullable = false)
+    private Integer id;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Servicios_Paquetes",
-            joinColumns = @JoinColumn(name = "codigo_paquete"),
-            inverseJoinColumns = @JoinColumn(name = "codigo_servicio")
-    )
-    private Set<Services> servicios = new HashSet<>();
+    @Column(name = "paqCos", nullable = false, precision = 10, scale = 2)
+    private BigDecimal paqCos;
+
+    @ColumnDefault("'A'")
+    @Column(name = "paqEstReg", nullable = false)
+    private Character paqEstReg;
 
 }

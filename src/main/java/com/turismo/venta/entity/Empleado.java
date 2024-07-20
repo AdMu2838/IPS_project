@@ -1,45 +1,25 @@
 package com.turismo.venta.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.math.BigDecimal;
 
+@Getter
+@Setter
 @Entity
-@Data
-@Table(name = "empleados")
+@Table(name = "empleados", schema = "web_tourist_bd")
 public class Empleado {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_empleado")
-    private String idEmpleado;
+    @Column(name = "empCod", nullable = false)
+    private Integer id;
 
-    @Column(name = "nombre")
-    private String name;
+    @Column(name = "empSue", nullable = false, precision = 10, scale = 2)
+    private BigDecimal empSue;
 
-    @Column
-    private String apellido;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "usuCod", nullable = false)
+    private Usuario usuCod;
 
-    @Column(name = "direccion")
-    private String direccion;
-
-    @Column
-    private String dni;
-
-    @Column
-    private String fecha_nac;
-
-    @Column
-    private String nacionalidad;
-
-    @Column
-    private String celular;
-
-    @Column
-    private String email;
-
-    @Column
-    private String cargo;
-
-    @Column
-    private Double sueldo;
 }
