@@ -1,5 +1,7 @@
 package com.turismo.venta.domain.servicio;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.turismo.venta.domain.paquete.Paquete;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,6 +13,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -59,6 +63,10 @@ public class Servicio {
     @ColumnDefault("'A'")
     @Column(name = "serestreg", nullable = false)
     private Character serEstReg;
+
+    @ManyToMany(mappedBy = "servicios")
+    @JsonBackReference
+    private Set<Paquete> paquetes = new HashSet<>();
 
     public Servicio(DatosRegistroServicio datosRegistroServicio) {
         this.serImg = datosRegistroServicio.image();
