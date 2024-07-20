@@ -1,6 +1,7 @@
 package com.turismo.venta.domain.servicio;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public record DatosListadoServicio(
         Long id,
@@ -8,10 +9,11 @@ public record DatosListadoServicio(
         String descripcion,
         String nombre,
         BigDecimal costo,
-        String destino
+        String destino,
+        LocalDate fecha
 ) {
     public DatosListadoServicio(Servicio servicio) {
         this(servicio.getId(), servicio.getSerImg(), servicio.getSerDes(), servicio.getSerNom(), servicio.getSerCos(),
-                servicio.getSerDestino());
+                servicio.getSerDestino(), servicio.getSerFec());
     }
 }

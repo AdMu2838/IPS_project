@@ -11,6 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("/servicio")
 public class ServicioController {
@@ -41,5 +43,19 @@ public class ServicioController {
         Servicio servicio = servicioRepository.getReferenceById(id);
         servicio.eliminar();
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/destino/{destino}")
+    public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorDestino(@PathVariable String destino,
+                                                                                @PageableDefault(size = 2) Pageable paginacion) {
+        return ResponseEntity.ok(servicioRepository.findServicioDestino(destino, paginacion).map(DatosListadoServicio::new));
+    }
+
+    @GetMapping("/fecha")
+    public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorFecha(@RequestParam String startDate,
+                                                                              @RequestParam String endDate,
+                                                                              @PageableDefault(size = 2) Pageable paginacion) {
+        return ResponseEntity.ok(servicioRepository.findServiciosByFechaBetween(LocalDate.parse(startDate),
+                LocalDate.parse(endDate),paginacion).map(DatosListadoServicio::new));
     }
 }
