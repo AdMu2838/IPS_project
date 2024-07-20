@@ -20,6 +20,10 @@ public record DatosRegistroServicio(
         @NotBlank
         BigDecimal costo,
         @NotBlank
+        String tipo,
+        @NotBlank
+        String destino,
+        @NotBlank
         Character estadoRegistro
 ) {
 
