@@ -1,4 +1,4 @@
-package com.turismo.venta.entity;
+package com.turismo.venta.domain.paquete;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
