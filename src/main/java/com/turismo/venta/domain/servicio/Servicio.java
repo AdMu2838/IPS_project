@@ -22,7 +22,7 @@ public class Servicio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "sercod", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Size(max = 255)
     @Column(name = "serimg")
