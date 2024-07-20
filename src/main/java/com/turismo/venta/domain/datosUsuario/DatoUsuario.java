@@ -1,6 +1,6 @@
 package com.turismo.venta.domain.datosUsuario;
 
-import com.turismo.venta.entity.Usuario;
+import com.turismo.venta.domain.usuario.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
