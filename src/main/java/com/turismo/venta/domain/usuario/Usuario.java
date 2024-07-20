@@ -23,21 +23,25 @@ import java.util.List;
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "usucod", nullable = false)
     private Integer id;
 
+    @Column(name = "usuema", nullable = false, length = 50)
     private String usuEma;
 
+    @Column(name = "usupas", nullable = false, length = 50)
     private String usuPas;
-
+    @Column(name = "usuestreg", nullable = false, length = 50)
     @ColumnDefault("'A'")
     private Character usuEstReg;
-
+    @Column(name = "usurol", nullable = false, length = 50)
     private String usuRol;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(usuRol));
+        // Asegúrate de que el rol tenga el prefijo "ROLE_"
+        roles.add(new SimpleGrantedAuthority("ROLE_" + usuRol.toUpperCase()));
         return roles;
     }
 
@@ -70,4 +74,5 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
