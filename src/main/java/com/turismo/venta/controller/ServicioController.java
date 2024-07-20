@@ -76,6 +76,6 @@ public class ServicioController {
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorTipo(@PathVariable String tipo,
                                                                               @PageableDefault(size = 2) Pageable paginacion) {
-        return ResponseEntity.ok(servicioRepository.findBySerTipo(tipo, paginacion).map(DatosListadoServicio::new));
+        return ResponseEntity.ok(servicioRepository.findByServicioTipo(tipo, paginacion).map(DatosListadoServicio::new));
     }
 }
