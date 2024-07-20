@@ -4,13 +4,16 @@ import com.turismo.venta.domain.servicio.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
 
 @RestController
@@ -20,14 +23,25 @@ public class ServicioController {
     private ServicioRepository servicioRepository;
 
     @PostMapping
-    public void registrarServicio(@RequestBody @Valid DatosRegistroServicio datosRegistroServicio) {
-        servicioRepository.save(new Servicio(datosRegistroServicio));
+    public ResponseEntity<DatosRespuestaServicio> registrarServicio(@RequestBody @Valid DatosRegistroServicio datosRegistroServicio,
+                                                                    UriComponentsBuilder uriComponentsBuilder) {
+        Servicio servicio = servicioRepository.save(new Servicio(datosRegistroServicio));
+        DatosRespuestaServicio datosRespuestaServicio = new DatosRespuestaServicio(servicio);
+        URI url = uriComponentsBuilder.path("servicio/{id}").buildAndExpand(servicio.getId()).toUri();
+        return ResponseEntity.created(url).body(datosRespuestaServicio);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DatosRespuestaServicio> obtenerServicio(@PathVariable Long id){
+        Servicio servicio = servicioRepository.getReferenceById(id);
+        return ResponseEntity.ok(new DatosRespuestaServicio(servicio));
     }
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoServicio>> listarServicios(@PageableDefault(size = 2) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findAllActive(paginacion).map(DatosListadoServicio::new));
     }
+
     @PutMapping
     @Transactional
     public ResponseEntity actualizarServicio(@RequestBody @Valid DatosActualizarServicio datosActualizarServicio) {
