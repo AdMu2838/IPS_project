@@ -36,7 +36,16 @@ public class Servicio {
     private BigDecimal serCos;
 
     @ColumnDefault("'A'")
-    @Column(name = "serEstReg", nullable = false)
+    @Column(name = "serestreg", nullable = false)
     private Character serEstReg;
 
+    public Servicio(DatosRegistroServicio datosRegistroServicio) {
+        this.serImg = datosRegistroServicio.image();
+        this.serDes = datosRegistroServicio.descripcion();
+        this.serNom = datosRegistroServicio.nombre();
+        this.serCos = datosRegistroServicio.costo();
+        this.serEstReg = datosRegistroServicio.estadoRegistro();
+        this.serFec = datosRegistroServicio.fecha();
+
+    }
 }
