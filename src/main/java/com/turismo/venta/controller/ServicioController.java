@@ -35,4 +35,11 @@ public class ServicioController {
                 servicio.getSerDes(), servicio.getSerFec(), servicio.getSerCos(), servicio.getSerTipo(),
                 servicio.getSerDestino(), servicio.getSerEstReg()));
     }
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity eliminarServicio(@PathVariable Long id) {
+        Servicio servicio = servicioRepository.getReferenceById(id);
+        servicio.eliminar();
+        return ResponseEntity.ok().build();
+    }
 }

@@ -82,4 +82,8 @@ public class Servicio {
             this.serFec = datosActualizarServicio.fecha();
         }
     }
+
+    public void eliminar() {
+        this.serEstReg = 'I';
+    }
 }
