@@ -4,10 +4,7 @@ import com.turismo.venta.domain.servicio.DatosRegistroServicio;
 import com.turismo.venta.domain.servicio.Servicio;
 import com.turismo.venta.domain.servicio.ServicioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/servicio")
@@ -20,4 +17,8 @@ public class ServicioController {
         servicioRepository.save(new Servicio(datosRegistroServicio));
     }
 
+    @GetMapping
+    public Iterable<Servicio> listarServicios() {
+        return servicioRepository.findAll();
+    }
 }
