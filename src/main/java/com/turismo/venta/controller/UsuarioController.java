@@ -2,13 +2,19 @@ package com.turismo.venta.controller;
 
 
 import com.turismo.venta.domain.usuario.*;
+import com.turismo.venta.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -22,15 +28,6 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
-
-    @PostMapping("/register")
-    public ResponseEntity<DatosRespuestaUsuario> login(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario,
-                                                       UriComponentsBuilder uriComponentsBuilder) {
-        Usuario usuario = usuarioService.registrarUsuario(datosRegistroUsuario);
-        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario);
-        URI url = uriComponentsBuilder.path("/user/{id}").buildAndExpand(usuario.getId()).toUri();
-        return ResponseEntity.created(url).body(datosRespuestaUsuario);
-    }
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 2) Pageable paginacion) {
@@ -48,13 +45,26 @@ public class UsuarioController {
     @PutMapping("/modificarDatos")
     @Transactional
     public ResponseEntity actualizarDatosUsuario(@RequestBody @Valid DatosActualizarUsuario datosActualizarUsuario) {
-        Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuarioAutenticado = (Usuario) authentication.getPrincipal();
+
+        if (!usuarioAutenticado.getId().equals(usuarioAutenticado.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();  // O lanzar una excepción adecuada
+        }
+        Usuario usuario = usuarioRepository.getReferenceById(usuarioAutenticado.getId());
         usuario.actualizarDatosUsuario(datosActualizarUsuario);
         return ResponseEntity.ok().build();
     }
     @PutMapping("/cambiar-contrasena")
+    @Transactional
     public ResponseEntity<Void> cambiarContrasena(@RequestBody @Valid DatosActualizarContrasena datosActualizarContrasena) {
-        usuarioService.cambiarContrasena(datosActualizarContrasena.id(), datosActualizarContrasena.nuevaClave());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Usuario usuarioAutenticado = (Usuario) authentication.getPrincipal();
+
+        if (!usuarioAutenticado.getId().equals(usuarioAutenticado.getId())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        usuarioService.cambiarContrasena(usuarioAutenticado.getId(), datosActualizarContrasena.nuevaClave());
         return ResponseEntity.ok().build();
     }
 
