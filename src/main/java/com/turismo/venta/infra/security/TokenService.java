@@ -22,11 +22,13 @@ public class TokenService {
     public String generarToken(Usuario usuario) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret);
+            Instant expiracion = generarFechaExpiracion();
+            System.out.println("Fecha de expiracion al generar el token" + expiracion);
             return JWT.create()
                     .withIssuer("turismo venta")
                     .withSubject(usuario.getUsuEma())
                     .withClaim("id", usuario.getId())
-                    .withExpiresAt(generarFechaExpiracion())
+                    .withExpiresAt(expiracion)
                     .sign(algorithm);
         } catch (JWTCreationException exception){
             throw new RuntimeException();
@@ -35,27 +37,51 @@ public class TokenService {
 
     public String getSubject(String token) {
         if (token == null) {
-            throw new RuntimeException();
+            throw new RuntimeException("Token is null");
         }
-        DecodedJWT verifier = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(apiSecret); // validando firma
-            verifier = JWT.require(algorithm)
+            DecodedJWT verifier = JWT.require(algorithm)
                     .withIssuer("turismo venta")
                     .build()
                     .verify(token);
-            verifier.getSubject();
+            return verifier.getSubject();
         } catch (JWTVerificationException exception) {
-            System.out.println(exception.toString());
+            System.out.println("JWTVerificationException: " + exception.toString());
+            throw new RuntimeException("Token verification failed: " + exception.getMessage());
+        } catch (Exception e) {
+            System.out.println("General exception: " + e.toString());
+            throw new RuntimeException("An error occurred during token verification: " + e.getMessage());
         }
-        if (verifier.getSubject() == null) {
-            throw new RuntimeException("Verifier invalido");
-        }
-        return verifier.getSubject();
     }
+
 
     private Instant generarFechaExpiracion() {
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-05:00"));
     }
+    // Metodo de antes :v
+//    public String getSubject(String token) {
+//        if (token == null) {
+//            throw new RuntimeException("Token esta nulo :C");
+//        }
+//        DecodedJWT verifier = null;
+//        try {
+//            Algorithm algorithm = Algorithm.HMAC256(apiSecret); // validando firma
+//            verifier = JWT.require(algorithm)
+//                    .withIssuer("turismo venta")
+//                    .build()
+//                    .verify(token);
+//            verifier.getSubject();
+//
+//        } catch (JWTVerificationException exception) {
+//            System.out.println(exception.toString());
+//        }
+//        if (verifier.getSubject() == null) {
+//            throw new RuntimeException("Verifier invalido");
+//        }
+//        return verifier.getSubject();
+//    }
+
+
 
 }

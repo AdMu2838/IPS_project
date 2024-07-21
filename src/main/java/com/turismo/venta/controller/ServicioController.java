@@ -53,7 +53,7 @@ public class ServicioController {
     }
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity eliminarServicio(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminarServicio(@PathVariable Long id) {
         Servicio servicio = servicioRepository.getReferenceById(id);
         servicio.eliminar();
         return ResponseEntity.ok().build();

@@ -1,5 +1,8 @@
 package com.turismo.venta.domain.usuario;
 
+import com.turismo.venta.domain.datosUsuario.DatoUsuario;
+import com.turismo.venta.domain.datosUsuario.DatosActualizarDatosUsuario;
+import com.turismo.venta.domain.datosUsuario.DatosRegistroDatosUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +27,7 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "usucod", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "usuema", nullable = false, length = 50)
     private String usuEma;
@@ -36,6 +39,33 @@ public class Usuario implements UserDetails {
     private Character usuEstReg;
     @Column(name = "usurol", nullable = false, length = 50)
     private String usuRol;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DatoUsuario> datosUsuarios;
+
+    public Usuario(DatosRegistroUsuario datosRegistroUsuario) {
+        this.usuEma = datosRegistroUsuario.login();
+        this.usuPas = datosRegistroUsuario.clave();
+        this.usuRol = datosRegistroUsuario.rol();
+        this.usuEstReg = datosRegistroUsuario.estadoRegistro();
+        this.datosUsuarios = new ArrayList<>();
+        for (DatosRegistroDatosUsuario dato : datosRegistroUsuario.datosUsuarios()) {
+            this.datosUsuarios.add(new DatoUsuario(dato, this));
+        }
+    }
+
+    public void eliminar() {
+        this.usuEstReg = 'I';
+    }
+
+    public void actualizarDatosUsuario(DatosActualizarUsuario datosActualizarUsuario) {
+        this.usuRol = datosActualizarUsuario.rol();
+        this.datosUsuarios = new ArrayList<>();
+        for (DatosActualizarDatosUsuario datoActualizado : datosActualizarUsuario.datosUsuarios()) {
+            this.datosUsuarios.add(new DatoUsuario(datoActualizado, this));
+        }
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -74,5 +104,6 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 
 }
