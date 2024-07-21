@@ -1,5 +1,6 @@
 package com.turismo.venta.domain.usuario;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.turismo.venta.domain.datosUsuario.DatoUsuario;
 import com.turismo.venta.domain.datosUsuario.DatosActualizarDatosUsuario;
 import com.turismo.venta.domain.datosUsuario.DatosRegistroDatosUsuario;
@@ -31,7 +32,7 @@ public class Usuario implements UserDetails {
 
     @Column(name = "usuema", nullable = false, length = 50)
     private String usuEma;
-
+    @JsonIgnore
     @Column(name = "usupas", nullable = false, length = 50)
     private String usuPas;
     @Column(name = "usuestreg", nullable = false, length = 50)

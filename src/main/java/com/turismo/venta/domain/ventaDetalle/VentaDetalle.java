@@ -1,5 +1,6 @@
 package com.turismo.venta.domain.ventaDetalle;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.turismo.venta.domain.paquete.Paquete;
 import com.turismo.venta.domain.servicio.Servicio;
 import com.turismo.venta.domain.venta.Venta;
@@ -25,6 +26,7 @@ public class VentaDetalle {
     @Column(name = "vencant", nullable = false)
     private Integer venCant;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "vennum", nullable = false)
     private Venta venta;

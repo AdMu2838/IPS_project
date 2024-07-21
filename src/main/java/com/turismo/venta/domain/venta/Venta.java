@@ -1,5 +1,6 @@
 package com.turismo.venta.domain.venta;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.turismo.venta.domain.usuario.Usuario;
 import com.turismo.venta.domain.ventaDetalle.VentaDetalle;
 import jakarta.persistence.*;
@@ -38,6 +39,7 @@ public class Venta {
     @JoinColumn(name = "usucod")
     private Usuario usuCod;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VentaDetalle> detalles;
 }
