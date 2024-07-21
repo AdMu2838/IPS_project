@@ -1,4 +1,4 @@
-package com.turismo.venta.entity;
+package com.turismo.venta.domain.empleado;
 
 import com.turismo.venta.domain.usuario.Usuario;
 import jakarta.persistence.*;

@@ -1,6 +1,7 @@
-package com.turismo.venta.entity;
+package com.turismo.venta.domain.venta;
 
 import com.turismo.venta.domain.usuario.Usuario;
+import com.turismo.venta.domain.empleado.Empleado;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
