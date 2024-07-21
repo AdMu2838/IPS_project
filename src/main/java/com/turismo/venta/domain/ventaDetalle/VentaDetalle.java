@@ -15,25 +15,26 @@ import java.math.BigDecimal;
 @Table(name = "venta_detalle", schema = "web_tourist_bd")
 public class VentaDetalle {
     @Id
-    @Column(name = "venDetCod", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vendetcod", nullable = false)
+    private Long id;
 
-    @Column(name = "venSubTot", nullable = false, precision = 10, scale = 2)
+    @Column(name = "vensubtot", nullable = false, precision = 10, scale = 2)
     private BigDecimal venSubTot;
 
-    @Column(name = "venCant", nullable = false)
+    @Column(name = "vencant", nullable = false)
     private Integer venCant;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "venNum", nullable = false)
-    private Venta venNum;
+    @ManyToOne
+    @JoinColumn(name = "vennum", nullable = false)
+    private Venta venta;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "serCod")
+    @JoinColumn(name = "sercod")
     private Servicio serCod;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "paqCod")
+    @JoinColumn(name = "paqcod")
     private Paquete paqCod;
 
 }

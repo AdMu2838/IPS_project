@@ -1,7 +1,7 @@
 package com.turismo.venta.domain.venta;
 
 import com.turismo.venta.domain.usuario.Usuario;
-import com.turismo.venta.domain.empleado.Empleado;
+import com.turismo.venta.domain.ventaDetalle.VentaDetalle;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,28 +17,27 @@ import java.time.LocalDate;
 @Table(name = "venta", schema = "web_tourist_bd")
 public class Venta {
     @Id
-    @Column(name = "venNum", nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "vennum", nullable = false)
+    private Long id;
 
-    @Column(name = "venFec", nullable = false)
+    @Column(name = "venfec", nullable = false)
     private LocalDate venFec;
 
-    @Column(name = "venMedPag", nullable = false, length = 50)
+    @Column(name = "venmedpag", nullable = false, length = 50)
     private String venMedPag;
 
     @ColumnDefault("'A'")
-    @Column(name = "venEstReg", nullable = false)
+    @Column(name = "venestreg", nullable = false)
     private Character venEstReg;
 
-    @Column(name = "venMon", nullable = false, precision = 10, scale = 2)
+    @Column(name = "venmon", nullable = false, precision = 10, scale = 2)
     private BigDecimal venMon;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empCod")
-    private Empleado empCod;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuCod")
+    @JoinColumn(name = "usucod")
     private Usuario usuCod;
 
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VentaDetalle> detalles;
 }
