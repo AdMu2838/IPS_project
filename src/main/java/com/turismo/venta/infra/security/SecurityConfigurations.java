@@ -30,7 +30,7 @@ public class SecurityConfigurations {
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/servicio", "/paquete")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST,  "/servicio")
+                .requestMatchers(HttpMethod.GET, "/servicio", "/paquete")
                 .hasRole("USER")
                 .requestMatchers(HttpMethod.PUT,"/user")
                 .hasRole("USER")
