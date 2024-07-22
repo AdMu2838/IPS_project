@@ -28,7 +28,7 @@ public class SecurityConfigurations {
                 .and().authorizeRequests()
                 .requestMatchers(HttpMethod.POST, "/login", "/register","/venta")
                 .permitAll()
-                .requestMatchers(HttpMethod.GET, "/servicio", "/paquete")
+                .requestMatchers(HttpMethod.GET, "/servicio", "/paquete","/servicio/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.PUT,"/user")
                 .hasRole("USER")
