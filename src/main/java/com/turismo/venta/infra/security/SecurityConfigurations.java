@@ -26,10 +26,16 @@ public class SecurityConfigurations {
         return httpSecurity.csrf().disable().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Le indiamos a Spring el tipo de sesion
                 .and().authorizeRequests()
-                .requestMatchers(HttpMethod.POST, "/login","/paquete", "/register", "/user","/venta")
+                .requestMatchers(HttpMethod.POST, "/login", "/register","/venta")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/servicio")
+                .requestMatchers(HttpMethod.GET, "/servicio", "/paquete")
+                .permitAll()
+                .requestMatchers(HttpMethod.POST,  "/servicio")
                 .hasRole("USER")
+                .requestMatchers(HttpMethod.PUT,"/user")
+                .hasRole("USER")
+                .anyRequest()
+                .hasRole("ADMIN")
                 .and()
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
