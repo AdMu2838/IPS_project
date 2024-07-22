@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,25 +34,30 @@ public class AuthenticationController {
     private TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<DatosJWTToken> autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario){
+    public ResponseEntity<DatosRespuestaUsuario> autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario){
         Authentication autToken = new UsernamePasswordAuthenticationToken(datosAutenticacionUsuario.login(),
                 datosAutenticacionUsuario.clave());
         var usuarioAutenticado = authenticationManager.authenticate(autToken);
+        Usuario usuario = (Usuario) usuarioAutenticado.getPrincipal();
         var JWTtoken = tokenService.generarToken((Usuario) usuarioAutenticado.getPrincipal());
-        return ResponseEntity.ok(new DatosJWTToken(JWTtoken));
+        String rol = usuarioAutenticado.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse("ROLE_USER");
+        return ResponseEntity.ok(new DatosRespuestaUsuario(usuario, JWTtoken));
     }
     @PostMapping("/register")
-    public ResponseEntity<DatosJWTToken> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario) {
-        Usuario usuario = usuarioService.registrarUsuario(datosRegistroUsuario);
+    public ResponseEntity<DatosRespuestaUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario) {
+        Usuario usuarioPorRegistrar = usuarioService.registrarUsuario(datosRegistroUsuario);
 
 //        URI url = uriComponentsBuilder.path("/user/{id}").buildAndExpand(usuario.getId()).toUri();
         Authentication autToken = new UsernamePasswordAuthenticationToken(datosRegistroUsuario.login(),
                 datosRegistroUsuario.clave());
         var usuarioAutenticado = authenticationManager.authenticate(autToken);
         var JWTtoken = tokenService.generarToken((Usuario) usuarioAutenticado.getPrincipal());
-
-//        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario , JWTtoken);
-        return ResponseEntity.ok(new DatosJWTToken(JWTtoken));
+        var usuarioRegistrado = (Usuario) usuarioAutenticado.getPrincipal();
+//        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuarioPorRegistrar , JWTtoken);
+        return ResponseEntity.ok(new DatosRespuestaUsuario(usuarioRegistrado, JWTtoken));
     }
 
 }

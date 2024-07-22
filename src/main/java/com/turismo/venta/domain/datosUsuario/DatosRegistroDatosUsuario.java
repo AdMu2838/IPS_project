@@ -18,7 +18,7 @@ public record DatosRegistroDatosUsuario(
         @NotNull
         LocalDate fechaNacimiento,
         @NotBlank
-        @Pattern(regexp = "\\d{4,6}")
+        @Pattern(regexp = "\\d{4,8}")
         String dni,
         @NotBlank
         String nacionalidad,
