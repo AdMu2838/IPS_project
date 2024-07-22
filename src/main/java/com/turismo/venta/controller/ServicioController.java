@@ -38,7 +38,7 @@ public class ServicioController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<DatosListadoServicio>> listarServicios(@PageableDefault(size = 2) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoServicio>> listarServicios(@PageableDefault(size = 5) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findAllActive(paginacion).map(DatosListadoServicio::new));
     }
 
@@ -77,5 +77,14 @@ public class ServicioController {
     public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorTipo(@PathVariable String tipo,
                                                                               @PageableDefault(size = 2) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findByServicioTipo(tipo, paginacion).map(DatosListadoServicio::new));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<Page<DatosListadoServicio>> buscarServiciosPorNombre(
+            @RequestParam String nombre,
+            @PageableDefault(size = 5) Pageable paginacion) {
+        Page<Servicio> serviciosPage = servicioRepository.findBySerNomContainingIgnoreCase(nombre, paginacion);
+        Page<DatosListadoServicio> datosListadoServicios = serviciosPage.map(DatosListadoServicio::new);
+        return ResponseEntity.ok(datosListadoServicios);
     }
 }

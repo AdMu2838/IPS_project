@@ -67,7 +67,7 @@ public class Usuario implements UserDetails {
         }
     }
 
-
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roles = new ArrayList<>();

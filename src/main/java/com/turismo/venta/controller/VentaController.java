@@ -65,7 +65,7 @@ public class VentaController {
                     VentaDetalle ventaDetalle = new VentaDetalle();
                     ventaDetalle.setVenSubTot(detalle.subtotal());
                     ventaDetalle.setVenCant(detalle.cantidad());
-                    ventaDetalle.setVenta(nuevaVenta); // Establecer la relación con la venta
+                    ventaDetalle.setVenta(nuevaVenta);
 
                     Optional<Servicio> servicio = servicioRepository.findById(detalle.servicioCodigo());
                     Optional<Paquete> paquete = paqueteRepository.findById(detalle.paqueteCodigo());
