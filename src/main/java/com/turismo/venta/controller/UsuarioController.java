@@ -30,7 +30,7 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 2) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 15) Pageable paginacion) {
         return ResponseEntity.ok(usuarioRepository.findAllActive(paginacion).map(DatosListadoUsuario::new));
     }
 

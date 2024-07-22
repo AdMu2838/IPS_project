@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 public record DatosListadoUsuario(
         Long id,
         String login,
+        Character estadoRegistro,
         List<DatosListadoDatosUsuario> datosUsuarios
 ) {
     public DatosListadoUsuario(Usuario usuario) {
-        this(usuario.getId(), usuario.getUsuEma(),
+        this(usuario.getId(), usuario.getUsuEma(),usuario.getUsuEstReg(),
                 usuario.getDatosUsuarios().stream()
                         .map(DatosListadoDatosUsuario::new)
                         .collect(Collectors.toList()));
