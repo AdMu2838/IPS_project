@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.turismo.venta.domain.usuario.Usuario;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,24 +35,22 @@ public class TokenService {
     }
 
     public String getSubject(String token) {
-        if (token == null) {
-            throw new RuntimeException();
+        if (token == null || token.isEmpty()) {
+            throw new RuntimeException("Token es nulo o vacío");
         }
-        DecodedJWT verifier = null;
+
         try {
-            Algorithm algorithm = Algorithm.HMAC256(apiSecret); // validando firma
-            verifier = JWT.require(algorithm)
+            Algorithm algorithm = Algorithm.HMAC256(apiSecret); // Validando firma
+            JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("turismo venta")
-                    .build()
-                    .verify(token);
-            verifier.getSubject();
+                    .build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return decodedJWT.getSubject();
         } catch (JWTVerificationException exception) {
-            System.out.println(exception.toString());
+            // Log o maneja el error de verificación del JWT
+            System.out.println("Error de verificación del token: " + exception.getMessage());
+            throw new RuntimeException("Token inválido", exception);
         }
-        if (verifier.getSubject() == null) {
-            throw new RuntimeException("Verifier invalido");
-        }
-        return verifier.getSubject();
     }
 
     private Instant generarFechaExpiracion() {

@@ -36,8 +36,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity<Void> eliminarUsuario(@RequestParam("id") Long id) {
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
         usuario.eliminar();
         return ResponseEntity.ok().build();
     }
