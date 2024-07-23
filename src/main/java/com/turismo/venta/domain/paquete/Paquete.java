@@ -23,7 +23,7 @@ public class Paquete {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "paqcod", nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(name = "paqcos", nullable = false, precision = 10, scale = 2)
     private BigDecimal paqCos;

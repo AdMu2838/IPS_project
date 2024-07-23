@@ -1,14 +1,12 @@
 package com.turismo.venta.controller;
 
-import com.turismo.venta.domain.paquete.Paquete;
-import com.turismo.venta.domain.paquete.PaqueteRepository;
-import com.turismo.venta.domain.paquete.PaqueteServicio;
-import com.turismo.venta.domain.paquete.DatosActualizarPaquete;
+import com.turismo.venta.domain.paquete.*;
 import com.turismo.venta.domain.servicio.Servicio;
 import com.turismo.venta.domain.servicio.ServicioRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/paquete")
@@ -100,7 +96,28 @@ public class PaqueteController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Paquete>> listarPaquetes(@PageableDefault(size = 10) Pageable pageable) {
-        return ResponseEntity.ok(paqueteRepository.findActivePackages(pageable));
+    public ResponseEntity<Page<DatosListadoPaquete>> listarPaquetes(@PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(paqueteRepository.findActivePackages(pageable).map(DatosListadoPaquete::new));
     }
+    @GetMapping("/buscar")
+    public ResponseEntity<List<DatosListadoPaquete>> buscarPaquetesPorNombre(
+            @RequestParam String nombre) {
+        System.out.println(nombre);
+
+        List<DatosListadoPaquete> listaDatosListadoPaquetes = new ArrayList<>();
+
+        int pageNumber = 0;
+        int pageSize = 5;
+        Page<Paquete> paquetesPage;
+
+        do {
+            Pageable paginacion = PageRequest.of(pageNumber, pageSize);
+            paquetesPage = paqueteRepository.findByPaqNomContainingIgnoreCase(nombre, paginacion);
+            listaDatosListadoPaquetes.addAll(paquetesPage.map(DatosListadoPaquete::new).getContent());
+            pageNumber++;
+        } while (paquetesPage.hasNext());
+
+        return ResponseEntity.ok(listaDatosListadoPaquetes);
+    }
+
 }

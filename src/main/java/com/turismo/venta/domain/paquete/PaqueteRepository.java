@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 public interface PaqueteRepository extends JpaRepository<Paquete, Long> {
     @Query("SELECT p FROM Paquete p WHERE p.paqEstReg = 'A'")
     Page<Paquete> findActivePackages(Pageable pagination);
+
+    Page<Paquete> findByPaqNomContainingIgnoreCase(String nombre, Pageable paginacion);
 }
