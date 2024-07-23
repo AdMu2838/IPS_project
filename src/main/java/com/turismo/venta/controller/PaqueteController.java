@@ -1,6 +1,7 @@
 package com.turismo.venta.controller;
 
 import com.turismo.venta.domain.paquete.*;
+import com.turismo.venta.domain.servicio.DatosListadoServicio;
 import com.turismo.venta.domain.servicio.Servicio;
 import com.turismo.venta.domain.servicio.ServicioRepository;
 import jakarta.transaction.Transactional;
@@ -54,17 +55,21 @@ public class PaqueteController {
     }
 
     @GetMapping("/{paqCod}/servicios")
-    public ResponseEntity<Page<Servicio>> obtenerServiciosPorPaquete(
+    public ResponseEntity<Page<DatosListadoServicio>> obtenerServiciosPorPaquete(
             @PathVariable Long paqCod,
             @PageableDefault(size = 10) Pageable pageable) {
 
         return paqueteRepository.findById(paqCod)
                 .map(paquete -> {
                     Page<Servicio> serviciosPage = servicioRepository.findByPaquetes_PaqCod(paqCod, pageable);
-                    return ResponseEntity.ok(serviciosPage);
+                    // Convertir Page<Servicio> a Page<DatosListadoServicio>
+                    Page<DatosListadoServicio> datosListadoServicioPage = serviciosPage.map(DatosListadoServicio::new);
+                    return ResponseEntity.ok(datosListadoServicioPage);
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+
 
     @PutMapping
     @Transactional
