@@ -70,6 +70,13 @@ public class UsuarioController {
         usuarioService.cambiarContrasena(usuarioAutenticado.getId(), datosActualizarContrasena.nuevaClave());
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/{id}/rol")
+    public ResponseEntity<Void> actualizarRolUsuario(@PathVariable Long id, @RequestParam String nuevoRol) {
+        Usuario usuario = usuarioRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setUsuRol(nuevoRol);
+        usuarioRepository.save(usuario);
+        return ResponseEntity.ok().build();
+    }
 
 
 }
