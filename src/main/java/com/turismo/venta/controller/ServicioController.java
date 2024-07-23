@@ -4,9 +4,9 @@ import com.turismo.venta.domain.servicio.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/servicio")
 public class ServicioController {
+
     @Autowired
     private ServicioRepository servicioRepository;
+
+    @Autowired
+    private ServicioService servicioService;
 
     @PostMapping
     public ResponseEntity<DatosRespuestaServicio> registrarServicio(@RequestBody @Valid DatosRegistroServicio datosRegistroServicio,
@@ -65,6 +71,24 @@ public class ServicioController {
         return ResponseEntity.ok(servicioRepository.findServicioDestino(destino, paginacion).map(DatosListadoServicio::new));
     }
 
+
+    //para varios destinos
+    @GetMapping("/variosDestinos")
+    public ResponseEntity<Page<DatosListadoServicio>> listarVariosServiciosPorDestino(
+            @RequestParam List<String> destinos, // Utiliza @RequestParam para obtener una lista de destinos desde la query string
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(servicioService.findServiciosByDestinos(destinos, pageable));
+    }
+
+
+
+    @GetMapping("/destino")
+    public ResponseEntity<Page<DatosServicioDestino>> getDestinos(@PageableDefault(size=100) Pageable paginacion) {
+        Page<String> destinosPage = servicioService.obtenerTodosLosDestinos(paginacion);
+        Page<DatosServicioDestino> datosServicioDestinoPage = destinosPage.map(DatosServicioDestino::new);
+        return ResponseEntity.ok(datosServicioDestinoPage);
+    }
+
     @GetMapping("/fecha")
     public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorFecha(@RequestParam String startDate,
                                                                               @RequestParam String endDate,
@@ -75,16 +99,29 @@ public class ServicioController {
 
     @GetMapping("/tipo/{tipo}")
     public ResponseEntity<Page<DatosListadoServicio>> listarServiciosPorTipo(@PathVariable String tipo,
-                                                                              @PageableDefault(size = 2) Pageable paginacion) {
+                                                                             @PageableDefault(size = 2) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findByServicioTipo(tipo, paginacion).map(DatosListadoServicio::new));
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<Page<DatosListadoServicio>> buscarServiciosPorNombre(
-            @RequestParam String nombre,
-            @PageableDefault(size = 5) Pageable paginacion) {
-        Page<Servicio> serviciosPage = servicioRepository.findBySerNomContainingIgnoreCase(nombre, paginacion);
-        Page<DatosListadoServicio> datosListadoServicios = serviciosPage.map(DatosListadoServicio::new);
-        return ResponseEntity.ok(datosListadoServicios);
+    public ResponseEntity<List<DatosListadoServicio>> buscarServiciosPorNombre(
+            @RequestParam String nombre) {
+        System.out.println(nombre);
+
+        List<DatosListadoServicio> listaDatosListadoServicios = new ArrayList<>();
+
+        int pageNumber = 0;
+        int pageSize = 5;
+        Page<Servicio> serviciosPage;
+
+        do {
+            Pageable paginacion = PageRequest.of(pageNumber, pageSize);
+            serviciosPage = servicioRepository.findBySerNomContainingIgnoreCase(nombre, paginacion);
+            listaDatosListadoServicios.addAll(serviciosPage.map(DatosListadoServicio::new).getContent());
+            pageNumber++;
+        } while (serviciosPage.hasNext());
+
+
+        return ResponseEntity.ok(listaDatosListadoServicios);
     }
 }
