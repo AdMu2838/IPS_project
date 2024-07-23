@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Repository
 public interface ServicioRepository extends JpaRepository<Servicio, Long>{
     @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A'")
@@ -26,4 +28,9 @@ public interface ServicioRepository extends JpaRepository<Servicio, Long>{
     Page<Servicio> findByPaquetes_PaqCod(Long paqCod, Pageable pageable);
 
     Page<Servicio> findBySerNomContainingIgnoreCase(String nombre, Pageable paginacion);
+
+    @Query("SELECT DISTINCT s.serDestino FROM Servicio s")
+    Page<String> findDistinctDestinos(Pageable pageable);
+
+    Page<Servicio> findBySerDestinoIn(List<String> destinos, Pageable paginacion);
 }
