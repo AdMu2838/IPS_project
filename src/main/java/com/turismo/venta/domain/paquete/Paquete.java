@@ -31,9 +31,12 @@ public class Paquete {
     @ColumnDefault("'A'")
     @Column(name = "paqestreg", nullable = false)
     private Character paqEstReg;
-    @Column(name = "paqimg", length = 255)
+
+    @Column(name = "paqimg")
     private String paqImg;
 
+    @Column(name = "paqnom", length = 50)
+    private String paqNom;
     @ManyToMany
     @JoinTable(
             name = "paquetes_servicios",

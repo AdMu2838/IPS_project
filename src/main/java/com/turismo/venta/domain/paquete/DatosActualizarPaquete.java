@@ -9,6 +9,8 @@ public record DatosActualizarPaquete(
         @NotNull
         Long id,
         String paqImg,
+        String paqNom,
+
         List<Long> serviciosCodigos
 ) {
 }

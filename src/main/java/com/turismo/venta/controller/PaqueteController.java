@@ -17,8 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.util.UriComponentsBuilder;
 
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -34,14 +36,20 @@ public class PaqueteController {
     public ResponseEntity<Paquete> crearPaqueteConServicios(@RequestBody PaqueteServicio paqueteServicio,
                                                             UriComponentsBuilder uriComponentsBuilder) {
         Paquete paquete = new Paquete();
-        paquete.setPaqCos(paqueteServicio.paqCos());
+        paquete.setPaqNom(paqueteServicio.nombre());
         paquete.setPaqEstReg(paqueteServicio.paqEstReg());
         paquete.setPaqImg(paqueteServicio.paqImg());
-
+        BigDecimal totalCosto = BigDecimal.ZERO;
         Set<Servicio> servicios = new HashSet<>();
         for (Long serCod : paqueteServicio.serviciosCodigos()) {
-            servicioRepository.findById(serCod).ifPresent(servicios::add);
+            Optional<Servicio> servicioOpt = servicioRepository.findById(serCod);
+            if (servicioOpt.isPresent()) {
+                Servicio servicio = servicioOpt.get();
+                servicios.add(servicio);
+                totalCosto = totalCosto.add(servicio.getSerCos());
+            }
         }
+        paquete.setPaqCos(totalCosto);
         paquete.setServicios(servicios);
 
         Paquete nuevoPaquete = paqueteRepository.save(paquete);
@@ -72,7 +80,8 @@ public class PaqueteController {
             servicioRepository.findById(serCod).ifPresent(servicios::add);
         }
         return ResponseEntity.ok(new Paquete(paqueteActualizado.getId(),paqueteActualizado.getPaqCos(),
-                paqueteActualizado.getPaqEstReg(),paqueteActualizado.getPaqImg(), servicios));
+                paqueteActualizado.getPaqEstReg(),paqueteActualizado.getPaqImg(), paqueteActualizado.getPaqNom(),
+                servicios));
     }
 
     @DeleteMapping("/{id}")

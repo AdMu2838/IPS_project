@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record PaqueteServicio(
-        @NotBlank
-        BigDecimal paqCos,
+
         @NotBlank
         Character paqEstReg,
         @NotBlank
         String paqImg,
+        String nombre,
         @NotNull
         List<Long> serviciosCodigos
 ) {

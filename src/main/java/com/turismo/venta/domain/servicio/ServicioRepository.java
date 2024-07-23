@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface ServicioRepository extends JpaRepository<Servicio, Long>{
-    @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A'")
+    @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A' ORDER BY s.serFec" )
     Page<Servicio> findAllActive(Pageable paginacion);
 
     @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A' and s.serDestino = :destino")
