@@ -24,18 +24,27 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping("/active")
-    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosActivos(@PageableDefault(size = 15) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosActivos(@PageableDefault(size = 7) Pageable paginacion) {
         return ResponseEntity.ok(usuarioRepository.findAllActive(paginacion).map(DatosListadoUsuario::new));
     }
 
     @GetMapping("/inactive")
-    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosInactivos(@PageableDefault(size = 15) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosInactivos(@PageableDefault(size = 7) Pageable paginacion) {
         return ResponseEntity.ok(usuarioRepository.findAllInactive(paginacion).map(DatosListadoUsuario::new));
     }
 
     @GetMapping("/todos")
-    public ResponseEntity<Page<DatosListadoUsuario>> listarTodosLosUsuarios(@PageableDefault(size = 15) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoUsuario>> listarTodosLosUsuarios(@PageableDefault(size = 7) Pageable paginacion) {
         return ResponseEntity.ok(usuarioRepository.findAll(paginacion).map(DatosListadoUsuario::new));
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<Page<DatosListadoUsuario>> listarAdmins(@PageableDefault(size = 7) Pageable paginacion) {
+        return ResponseEntity.ok(usuarioRepository.findAllAdmins(paginacion).map(DatosListadoUsuario::new));
+    }
+    @GetMapping("/normales")
+    public ResponseEntity<Page<DatosListadoUsuario>> listarNormales(@PageableDefault(size = 7) Pageable paginacion) {
+        return ResponseEntity.ok(usuarioRepository.findAllUsers(paginacion).map(DatosListadoUsuario::new));
     }
 
     @DeleteMapping("/inactivar/{id}")
