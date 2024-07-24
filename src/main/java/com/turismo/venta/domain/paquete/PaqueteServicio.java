@@ -12,6 +12,7 @@ public record PaqueteServicio(
         Character paqEstReg,
         @NotBlank
         String paqImg,
+        @NotBlank
         String nombre,
         @NotNull
         List<Long> serviciosCodigos

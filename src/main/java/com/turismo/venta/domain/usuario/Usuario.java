@@ -55,9 +55,10 @@ public class Usuario implements UserDetails {
         }
     }
 
-    public void eliminar() {
+    public void inactivar() {
         this.usuEstReg = 'I';
     }
+    public void activar() { this.usuEstReg = 'A'; }
 
     public void actualizarDatosUsuario(DatosActualizarUsuario datosActualizarUsuario) {
         this.usuRol = datosActualizarUsuario.rol();
@@ -105,6 +106,7 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 
 
 }

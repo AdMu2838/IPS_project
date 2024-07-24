@@ -13,4 +13,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 
     @Query("SELECT u FROM Usuario u WHERE u.usuEstReg = 'A'")
     Page<Usuario> findAllActive(Pageable paginacion);
+
+    @Query("SELECT u FROM Usuario u WHERE u.usuEstReg = 'I'")
+    Page<Usuario> findAllInactive(Pageable paginacion);
 }
