@@ -108,6 +108,24 @@ public class VentaController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaVenta);
     }
+    @GetMapping
+    public ResponseEntity<Page<DatosListadoVenta>> listarVentas(Pageable paginacion) {
+        Page<Venta> ventas = ventaRepository.findAll(paginacion);
+
+        Page<DatosListadoVenta> ventasDTO = ventas
+                .map(venta -> {
+                    // Obtener el nombre del usuario
+                    String nombreUsuario = usuarioRepository.findById(venta.getUsuCod().getId())
+                            .map(Usuario::getUsuEma)
+                            .orElse("Usuario no encontrado");
+
+                    // Crear el DTO de venta
+                    return new DatosListadoVenta(venta);
+                });
+
+
+        return ResponseEntity.ok(ventasDTO);
+    }
 
 
 

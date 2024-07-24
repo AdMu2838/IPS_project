@@ -9,18 +9,21 @@ import java.util.List;
 public record DatosListadoVenta(
         Long id,
         LocalDate fecha,
-        Character estado,
-        BigDecimal total,
-        List<VentaDetalle> detalles
+        String medioPago,
+        Character estadoRegistro,
+        BigDecimal montoTotal,
+        String nombreUsuario
 
 ) {
     public DatosListadoVenta(Venta venta) {
         this(
                 venta.getId(),
                 venta.getVenFec(),
+                venta.getVenMedPag(),
                 venta.getVenEstReg(),
                 venta.getVenMon(),
-                venta.getDetalles()
+                venta.getUsuCod().getUsuEma()
+
         );
     }
 }
