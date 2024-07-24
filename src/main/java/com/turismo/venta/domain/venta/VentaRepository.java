@@ -12,8 +12,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     @Query("SELECT v FROM Venta v WHERE v.venEstReg = 'A'")
     Page<Venta> findAllActive(Pageable paginacion);
 
-    @Query("SELECT v FROM Venta v WHERE v.venFec = :fecha")
-    Page<Venta> findByFecha(@Param("fecha") LocalDate fecha, Pageable pageable);
+    Page<Venta> findByVenFec(LocalDate fecha, Pageable paginacion);
 
     @Query("SELECT v FROM Venta v WHERE FUNCTION('MONTH', v.venFec) = :mes AND FUNCTION('YEAR', v.venFec) = :anio")
     Page<Venta> findByMesAndAnio(@Param("mes") int mes, @Param("anio") int anio, Pageable pageable);

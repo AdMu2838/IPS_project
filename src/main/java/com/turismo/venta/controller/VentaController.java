@@ -134,7 +134,8 @@ public class VentaController {
     public ResponseEntity<Page<DatosListadoVenta>> listarVentasPorDia(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
             Pageable pageable) {
-        Page<Venta> ventas = ventaRepository.findByFecha(fecha, pageable);
+        System.out.println("Fecha recibida en el backend: " + fecha);
+        Page<Venta> ventas = ventaRepository.findByVenFec(fecha, pageable);
         Page<DatosListadoVenta> ventasDTO = ventas.map(DatosListadoVenta::new);
         return ResponseEntity.ok(ventasDTO);
     }
