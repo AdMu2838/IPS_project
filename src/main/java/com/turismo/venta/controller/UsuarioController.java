@@ -2,7 +2,6 @@ package com.turismo.venta.controller;
 
 
 import com.turismo.venta.domain.usuario.*;
-import com.turismo.venta.infra.security.TokenService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/user")
@@ -29,19 +23,40 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @GetMapping
-    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuarios(@PageableDefault(size = 15) Pageable paginacion) {
+    @GetMapping("/active")
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosActivos(@PageableDefault(size = 15) Pageable paginacion) {
         return ResponseEntity.ok(usuarioRepository.findAllActive(paginacion).map(DatosListadoUsuario::new));
     }
 
-    @DeleteMapping("/{id}")
+    @GetMapping("/inactive")
+    public ResponseEntity<Page<DatosListadoUsuario>> listarUsuariosInactivos(@PageableDefault(size = 15) Pageable paginacion) {
+        return ResponseEntity.ok(usuarioRepository.findAllInactive(paginacion).map(DatosListadoUsuario::new));
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<Page<DatosListadoUsuario>> listarTodosLosUsuarios(@PageableDefault(size = 15) Pageable paginacion) {
+        return ResponseEntity.ok(usuarioRepository.findAll(paginacion).map(DatosListadoUsuario::new));
+    }
+
+    @DeleteMapping("/inactivar/{id}")
     @Transactional
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+    public ResponseEntity<Void> inactivarUsuario(@PathVariable Long id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
-        usuario.eliminar();
+        usuario.inactivar();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/activar/{id}")
+    @Transactional
+    public ResponseEntity<Void> activarUsuario(@PathVariable Long id) {
+        Usuario usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+        usuario.activar();
         return ResponseEntity.ok().build();
     }
 
