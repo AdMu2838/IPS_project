@@ -31,7 +31,7 @@ public class SecurityConfigurations {
                 .requestMatchers(HttpMethod.GET, "/servicio", "/paquete","/servicio/**","/paquete/**")
                 .permitAll()
                 .requestMatchers(HttpMethod.PUT, "/user/modificarDatos", "/user/cambiar-contrasena").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/user", "/user/**").hasRole("ADMIN")
+                //.requestMatchers(HttpMethod.GET, "/user", "/user/**").hasRole("ADMIN")
                 .anyRequest()
                 .hasRole("ADMIN")
                 .and()

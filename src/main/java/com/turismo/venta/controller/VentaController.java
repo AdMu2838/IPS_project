@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Optional;
@@ -128,5 +130,31 @@ public class VentaController {
     }
 
 
+    @GetMapping("/dia")
+    public ResponseEntity<Page<DatosListadoVenta>> listarVentasPorDia(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+            Pageable pageable) {
+        Page<Venta> ventas = ventaRepository.findByFecha(fecha, pageable);
+        Page<DatosListadoVenta> ventasDTO = ventas.map(DatosListadoVenta::new);
+        return ResponseEntity.ok(ventasDTO);
+    }
 
+    @GetMapping("/mes")
+    public ResponseEntity<Page<DatosListadoVenta>> listarVentasPorMes(
+            @RequestParam int mes,
+            @RequestParam int anio,
+            Pageable pageable) {
+        Page<Venta> ventas = ventaRepository.findByMesAndAnio(mes, anio, pageable);
+        Page<DatosListadoVenta> ventasDTO = ventas.map(DatosListadoVenta::new);
+        return ResponseEntity.ok(ventasDTO);
+    }
+
+    @GetMapping("/anio")
+    public ResponseEntity<Page<DatosListadoVenta>> listarVentasPorAnio(
+            @RequestParam int anio,
+            Pageable pageable) {
+        Page<Venta> ventas = ventaRepository.findByAnio(anio, pageable);
+        Page<DatosListadoVenta> ventasDTO = ventas.map(DatosListadoVenta::new);
+        return ResponseEntity.ok(ventasDTO);
+    }
 }
