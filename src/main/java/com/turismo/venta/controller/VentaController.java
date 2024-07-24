@@ -46,51 +46,69 @@ public class VentaController {
 
     @PostMapping
     public ResponseEntity<Venta> crearVentaConDetalles(@RequestBody DatosRegistroVenta datosRegistroVenta) {
-        Optional<Usuario> usuario = usuarioRepository.findById(datosRegistroVenta.usuarioCodigo());
-        if (usuario.isEmpty()) {
+        // Verificar si el usuario existe
+        Optional<Usuario> usuarioOpt = usuarioRepository.findById(datosRegistroVenta.usuarioCodigo());
+        if (usuarioOpt.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
+        Usuario usuario = usuarioOpt.get();
+
+        // Crear la nueva venta
         Venta venta = new Venta();
         venta.setVenFec(datosRegistroVenta.fecha());
         venta.setVenMedPag(datosRegistroVenta.medioPago());
         venta.setVenEstReg(datosRegistroVenta.estadoRegistro());
-        venta.setUsuCod(usuario.get());
-        venta.setVenMon(calcularMontoTotal(datosRegistroVenta.detalles()));
+        venta.setUsuCod(usuario);
 
-        Venta nuevaVenta = ventaRepository.save(venta);
-
+        // Calcular el subtotal y el monto total de la venta
         List<VentaDetalle> detalles = datosRegistroVenta.detalles().stream()
                 .map(detalle -> {
                     VentaDetalle ventaDetalle = new VentaDetalle();
-                    ventaDetalle.setVenSubTot(detalle.subtotal());
-                    ventaDetalle.setVenCant(detalle.cantidad());
-                    ventaDetalle.setVenta(nuevaVenta);
+                    BigDecimal subTotal = BigDecimal.ZERO;
 
-                    Optional<Servicio> servicio = servicioRepository.findById(detalle.servicioCodigo());
-                    Optional<Paquete> paquete = paqueteRepository.findById(detalle.paqueteCodigo());
+                    Long serCod = detalle.servicioCodigo();
+                    Long paqCod = detalle.paqueteCodigo();
 
-                    if (servicio.isEmpty() && paquete.isEmpty()) {
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Servicio o Paquete no encontrado");
+                    if (serCod != null) {
+                        Optional<Servicio> servicioOpt = servicioRepository.findById(serCod);
+                        if (servicioOpt.isEmpty()) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Servicio no encontrado");
+                        }
+                        Servicio servicio = servicioOpt.get();
+                        subTotal = subTotal.add(servicio.getSerCos());
+                        ventaDetalle.setSerCod(servicio);
                     }
 
-                    servicio.ifPresent(ventaDetalle::setSerCod);
-                    paquete.ifPresent(ventaDetalle::setPaqCod);
+                    if (paqCod != null) {
+                        Optional<Paquete> paqueteOpt = paqueteRepository.findById(paqCod);
+                        if (paqueteOpt.isEmpty()) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Paquete no encontrado");
+                        }
+                        Paquete paquete = paqueteOpt.get();
+                        subTotal = subTotal.add(paquete.getPaqCos());
+                        ventaDetalle.setPaqCod(paquete);
+                    }
+
+                    ventaDetalle.setVenSubTot(subTotal);
+                    ventaDetalle.setVenCant(detalle.cantidad());
+                    ventaDetalle.setVenta(venta);
 
                     return ventaDetalle;
                 })
                 .toList();
 
+        BigDecimal montoTotal = detalles.stream()
+                .map(detalle -> detalle.getVenSubTot().multiply(BigDecimal.valueOf(detalle.getVenCant())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        venta.setVenMon(montoTotal);
+
+        Venta nuevaVenta = ventaRepository.save(venta);
         ventaDetalleRepository.saveAll(detalles);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaVenta);
     }
 
 
-    private BigDecimal calcularMontoTotal(List<DatosRegistroDetalle> detalles) {
-        return detalles.stream()
-                .map(detalle -> detalle.subtotal().multiply(BigDecimal.valueOf(detalle.cantidad())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 
 }

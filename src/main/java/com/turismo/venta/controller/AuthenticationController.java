@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
