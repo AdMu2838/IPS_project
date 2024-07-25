@@ -9,11 +9,15 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ServicioRepository extends JpaRepository<Servicio, Long>{
     @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A' ORDER BY s.serFec" )
     Page<Servicio> findAllActive(Pageable paginacion);
+
+    @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'I' ORDER BY s.serFec" )
+    Page<Servicio> findAllInactive(Pageable paginacion);
 
     @Query("SELECT s FROM Servicio s WHERE s.serEstReg = 'A' and s.serDestino = :destino")
     Page<Servicio> findServicioDestino(String destino, Pageable paginacion);

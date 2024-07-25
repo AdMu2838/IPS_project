@@ -10,10 +10,11 @@ public record DatosListadoServicio(
         String nombre,
         BigDecimal costo,
         String destino,
-        LocalDate fecha
+        LocalDate fecha,
+        Character estadoRegistro
 ) {
     public DatosListadoServicio(Servicio servicio) {
         this(servicio.getId(), servicio.getSerImg(), servicio.getSerDes(), servicio.getSerNom(), servicio.getSerCos(),
-                servicio.getSerDestino(), servicio.getSerFec());
+                servicio.getSerDestino(), servicio.getSerFec(), servicio.getSerEstReg());
     }
 }

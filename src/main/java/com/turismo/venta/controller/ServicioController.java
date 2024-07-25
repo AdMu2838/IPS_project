@@ -45,8 +45,17 @@ public class ServicioController {
 
     @GetMapping
     public ResponseEntity<Page<DatosListadoServicio>> listarServicios(@PageableDefault(size = 5) Pageable paginacion) {
+        return ResponseEntity.ok(servicioRepository.findAll(paginacion).map(DatosListadoServicio::new));
+    }
+    @GetMapping("/activos")
+    public ResponseEntity<Page<DatosListadoServicio>> listarServiciosActivos(@PageableDefault(size = 5) Pageable paginacion) {
         return ResponseEntity.ok(servicioRepository.findAllActive(paginacion).map(DatosListadoServicio::new));
     }
+    @GetMapping("/inactivos")
+    public ResponseEntity<Page<DatosListadoServicio>> listarServiciosInactivos(@PageableDefault(size = 5) Pageable paginacion) {
+        return ResponseEntity.ok(servicioRepository.findAllInactive(paginacion).map(DatosListadoServicio::new));
+    }
+
 
     @PutMapping
     @Transactional
@@ -57,11 +66,19 @@ public class ServicioController {
                 servicio.getSerDes(), servicio.getSerFec(), servicio.getSerCos(), servicio.getSerTipo(),
                 servicio.getSerDestino(), servicio.getSerEstReg()));
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/inactivar/{id}")
     @Transactional
-    public ResponseEntity<Void> eliminarServicio(@PathVariable Long id) {
+    public ResponseEntity<Void> inactivarServicio(@PathVariable Long id) {
         Servicio servicio = servicioRepository.getReferenceById(id);
-        servicio.eliminar();
+        servicio.inactivar();
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/activar/{id}")
+    @Transactional
+    public ResponseEntity<Void> activarServicio(@PathVariable Long id) {
+        Servicio servicio = servicioRepository.getReferenceById(id);
+        servicio.activar();
         return ResponseEntity.ok().build();
     }
 

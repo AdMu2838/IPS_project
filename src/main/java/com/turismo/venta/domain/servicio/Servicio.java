@@ -89,7 +89,11 @@ public class Servicio {
         }
     }
 
-    public void eliminar() {
+    public void inactivar() {
         this.serEstReg = 'I';
+    }
+
+    public void activar() {
+        this.serEstReg = 'A';
     }
 }
