@@ -11,7 +11,7 @@
 	<groupId>com.turismo</groupId>
 	<artifactId>venta</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>venta</name>
 	<description>Sistema para empresa de turismo</description>
 	<properties>
